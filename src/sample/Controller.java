@@ -1,5 +1,6 @@
 package sample;
 
+import dbUtil.dbConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,6 +17,7 @@ import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 
@@ -23,6 +25,7 @@ public class Controller implements Initializable
 {
     Dictionary dictionary;
     Node selected;
+    dbUtil.dbConnection dbConnection = new dbConnection();
     @FXML
         private TextField key_field;
     @FXML
@@ -44,7 +47,7 @@ public class Controller implements Initializable
         System.out.println("Default controller constructor...");
     }
     @FXML
-    void Add()
+    void Add() throws SQLException
     {
         dictionary.add(key_field.getText(), value_field.getText());
         key_field.setText("");
@@ -70,7 +73,7 @@ public class Controller implements Initializable
         update();
     }
     @FXML
-    void Search()
+    void Search() throws SQLException, ClassNotFoundException
     {
         Object obj;
         System.out.println(key_field3.getText());
@@ -156,7 +159,8 @@ public class Controller implements Initializable
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
-        dictionary = new Dictionary();
+        try { dictionary = new Dictionary(); }
+        catch (SQLException | ClassNotFoundException e) { e.printStackTrace(); }
         key_column.setText("Key");
         key_column.setCellValueFactory(new PropertyValueFactory<>("key"));
         def_column.setText("Definition");
