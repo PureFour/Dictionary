@@ -13,7 +13,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
 import java.net.URL;
@@ -43,7 +42,8 @@ public class Controller implements Initializable
     @FXML
         private TableColumn<Node, String> def_column;
 
-    public Controller(){
+    public Controller() throws SQLException
+    {
         System.out.println("Default controller constructor...");
     }
     @FXML
@@ -52,10 +52,10 @@ public class Controller implements Initializable
         dictionary.add(key_field.getText(), value_field.getText());
         key_field.setText("");
         value_field.setText("");
-        update();
+        Update();
     }
     @FXML
-    void Delete()
+    void Delete() throws SQLException
     {
         if(key_field2.getText().isEmpty()) //jesli pole jest puste czyli usuwamy przez wybor
         {
@@ -70,10 +70,10 @@ public class Controller implements Initializable
         {
             dictionary.delete(key_field2.getText());
         }
-        update();
+        Update();
     }
     @FXML
-    void Search() throws SQLException, ClassNotFoundException
+    void Search() throws SQLException
     {
         Object obj;
         System.out.println(key_field3.getText());
@@ -94,7 +94,7 @@ public class Controller implements Initializable
         }
     }
     @FXML
-    void Save()
+    void Save() throws SQLException
     {
         Stage stage = new Stage();
         System.out.println("Saving a binary file...");
@@ -103,7 +103,7 @@ public class Controller implements Initializable
         if(f != null) dictionary.save(f);
     }
     @FXML
-    void Save_as_XML() throws FileNotFoundException
+    void Save_as_XML() throws FileNotFoundException, SQLException
     {
         System.out.println("Saving as .xml...");
 
@@ -113,46 +113,42 @@ public class Controller implements Initializable
         if(f != null)
         {
             XMLEncoder xmlEncoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(f)));
-            xmlEncoder.writeObject(dictionary);
+            xmlEncoder.writeObject(dictionary.getList());
             xmlEncoder.close();
         }
     }
     @FXML
-    void Load()
+    void Load() throws SQLException
     {
         Stage stage = new Stage();
         System.out.println("Loading a binary file...");
         FileChooser fileChooser = new FileChooser();
         File f = fileChooser.showOpenDialog(stage);
         if(f != null) dictionary.load(f);
-        update();
+        Update();
     }
     @FXML
-    void Load_as_XML() throws IOException
+    void Load_as_XML() throws IOException, SQLException
     {
         Stage stage = new Stage();
         System.out.println("Loading a xml file...");
         FileChooser fileChooser = new FileChooser();
         File f = fileChooser.showOpenDialog(stage);
-        if(f != null)
-        {
-            XMLDecoder xmlDecoder = new XMLDecoder(new BufferedInputStream(new FileInputStream(f)));
-            dictionary = (Dictionary) xmlDecoder.readObject();
-            update();
-        }
+        if(f != null) dictionary.load_as_XML(f);
+        Update();
     }
     @FXML
     void getSelected()
     {
         selected = table.getSelectionModel().getSelectedItem();
     }
-    private ObservableList<Node> getElements()
+    private ObservableList<Node> getElements() throws SQLException
     {
         ObservableList<Node> elements = FXCollections.observableArrayList();
         elements.addAll(dictionary.getList());
         return elements;
     }
-    private void update()
+    private void Update() throws SQLException
     {
         table.setItems(getElements());
     }
@@ -165,6 +161,11 @@ public class Controller implements Initializable
         key_column.setCellValueFactory(new PropertyValueFactory<>("key"));
         def_column.setText("Definition");
         def_column.setCellValueFactory(new PropertyValueFactory<>("value"));
+        try {
+            Update();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
 

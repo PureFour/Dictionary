@@ -1,6 +1,7 @@
 # Dictionary
 JavaFX app
-Simple Dictionary app
+Simple Dictionary app using SQLiteDB
+
 You can : 
 - add new definitions
 - delete

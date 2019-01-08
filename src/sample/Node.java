@@ -28,7 +28,7 @@ public class Node implements Serializable
 
     public Node(){}
     // Node constructor
-    public Node(Object dataValue, Object keyValue)
+    public Node(Object keyValue, Object dataValue)
     {
         value = dataValue;
         key = keyValue;
@@ -36,7 +36,7 @@ public class Node implements Serializable
     @Override
     public String toString()
     {
-        return ("[K: " + this.key + " | V: " + this.value + ']' + ' ');
+        return ("[K: " + this.key + " | D: " + this.value + ']' + ' ');
     }
 
 }
