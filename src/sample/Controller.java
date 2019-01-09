@@ -1,6 +1,5 @@
 package sample;
 
-import dbUtil.dbConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -22,9 +21,8 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable
 {
-    Dictionary dictionary;
-    Node selected;
-    dbUtil.dbConnection dbConnection = new dbConnection();
+    private Dictionary dictionary;
+    private Node selected;
     @FXML
         private TextField key_field;
     @FXML
@@ -42,7 +40,7 @@ public class Controller implements Initializable
     @FXML
         private TableColumn<Node, String> def_column;
 
-    public Controller() throws SQLException
+    public Controller()
     {
         System.out.println("Default controller constructor...");
     }

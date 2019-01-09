@@ -5,6 +5,7 @@ import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 
+@SuppressWarnings("Duplicates")
 public class Dictionary
 {
     private Connection c;
@@ -31,7 +32,7 @@ public class Dictionary
     }
     void delete(Object keyValue) throws SQLException
     {
-        if(keyValue == null);
+        if(keyValue == null) System.out.println("Please insert key value!");
         else
         {
             String sql = "DELETE FROM tab WHERE key = ?";
@@ -104,17 +105,6 @@ public class Dictionary
             preparedStatement.setString(1, n.getKey().toString());
             preparedStatement.setString(2, n.getValue().toString());
             preparedStatement.executeUpdate();
-        }
-    }
-    public void show() throws SQLException
-    {
-        Statement stmt = c.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT key, definition from tab");
-        while(rs.next())
-        {
-            System.out.println(
-                    rs.getString("key") + "\t" +
-                    rs.getString("definition"));
         }
     }
     ArrayList<Node> getList() throws SQLException
